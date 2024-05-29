@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="style1.css">
+    <script src="data.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+
+        <!-- 등록 폼 -->
+        <div class="inputContainer">
+            <select v-model="type">
+                <option value="character">인물등록</option>
+                <option value="skill">스킬등록</option>
+            </select>
+            <div v-if="type === 'character'" class="inputBox">
+                <label>name : </label>
+                <input v-model="characterInfo.name"/>
+
+                <label>introduction : </label>
+                <input v-model="characterInfo.introduction"/>
+
+                <label>img : </label>
+                <input v-model="characterInfo.img"/>
+            </div>
+            <div v-else class="inputBox">
+                <label>skill : </label>
+                <input v-model="skillInfo.skill"/>
+
+                <label>list : </label>
+                <input v-model="skillInfo.list" placeholder="기술 list는 ','로 구분해주세요"/>
+
+                <label>introduction : </label>
+                <input v-model="skillInfo.introduction"/>
+
+                <label>img : </label>
+                <template v-for="index in imgCnt">
+                <input v-model="skillInfo.imgs[index-1]"/>
+            </template>
+            <button @click="imgCnt++">이미지 추가</button>
+            </div>
+            <button @click="pushHandler">등록</button>
+        </div>
+    </div>
+    <script>
+        const{createApp, ref, reactive} = Vue;
+
+        createApp({
+            setup(){
+                const type = ref("skill");
+                const characters = ref([]);
+                const imgCnt = ref(1);
+
+                const characterInfo = reactive({
+                    id : 0,
+                    name: "",
+                    introduction: "",
+                    img: ""
+                });
+
+                const skillInfo = reactive({
+                    id : 0,
+                    skill: "",
+                    list: "",
+                    introduction: "",
+                    imgs: []
+                })
+
+                function pushHandler(){
+                    if(!characterInfo.name){
+                        return;
+                    }
+                    if(!characterInfo.introduction){
+                        return;
+                    }
+                    if(!characterInfo.img){
+                        return;
+                    }
+                    characterInfo.id = characters.value.length;
+
+                    characters.value.push({...characterInfo});
+                }
+
+                return{
+                    type,
+                    characterInfo,
+                    skillInfo,
+                    characters,
+                    imgCnt,
+                    
+                    pushHandler
+                }
+            }
+        }).mount("#app");
+    </script>
+</body>
+</html>

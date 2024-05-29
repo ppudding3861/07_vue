@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <link rel="stylesheet" href="style.css">
+        <script src="data.js"></script>
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="select">
+            <div>
+                <h1>vue v-model 이해하기</h1>
+                <div class="button">
+                    <button @click="toggleMode">조회하기</button>
+                </div>
+                <div class="border">
+                    <select class="toggle" v-model="selected">
+                        <option value="skillselect">스킬등록</option>
+                        <option value="characterselect">인물 등록</option>
+                    </select>
+                    <div class="Registration">
+                        <div v-if="selected === 'skillselect'">
+                            <label>skill :</label><br>
+                            <input v-model="skill"/><br>
+                            <label>list :</label><br>
+                            <input v-model="list"/><br>
+                            <label>introduction :</label><br>
+                            <input v-model="introduction"/><br>
+                            <label>img :</label><br>
+                            <div v-for="(img, index) in imgs" :key="index">
+                                <input name="img2" v-model="imgs[index]"/> <button @click="deleteItem(index)">삭제</button><br>
+                            </div>
+                            <button @click="addImage">이미지 추가</button>
+                        </div>
+                        <div v-if="selected === 'characterselect'">
+                            <label>name :</label><br>
+                            <input id="name" name="cha" v-model="character"/><br>
+                            <label>introduction :</label><br>
+                            <input id="introduction1" name="cha" v-model="introduction1"/><br>
+                            <label>img :</label><br>
+                            <input id="img1" name="cha" v-model="img1"/><br>
+                        </div>
+                    </div>
+                    <button @click="addList">등록하기</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <template v-if="isCharacterMode">
+                    <div v-for="item in jsonData" :key="item.id">
+                        <div class="bordered">
+                            <p>이름: {{ item.name }}</p>
+                            <p>소개: {{ item.introduction }}</p>
+                            <img :src="item.img" :alt="item.name" v-if="item.img"/>
+                            <p v-else>no image</p>
+                        </div>
+                    </div>
+                </template>
+                <template v-else>
+                    <div v-for="item in jsonSkill" :key="item.id">
+                        <div class="bordered">
+                            <p>이름: {{ item.skill }}</p>
+                            <p>소개: {{ item.introduction }}</p>
+                            <div class="skill-image">
+                                <div v-for="img in item.imgs" :key="img">
+                                    <img :src="img" :alt="item.skill" v-if="img"/>
+                                    <p v-else>no image</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <script>
+            const { createApp, ref } = Vue;
+
+            createApp({
+                setup() {
+                    const jsonData = ref(scholar);
+                    const jsonSkill = ref(msaSkill);
+                    const isCharacterMode = ref(true);
+                    const selected = ref('characterselect');
+                    const skill = ref('');
+                    const list = ref('');
+                    const introduction = ref('');
+                    const introduction1 = ref('');
+                    const img = ref('');
+                    const img1 = ref('');
+                    const character = ref('');
+                    const imgs = ref(['']);
+
+                    const toggleMode = () => {
+                        isCharacterMode.value = !isCharacterMode.value;
+                    };
+
+                    const addImage = () => {
+                        imgs.value.push("");
+                    };
+
+                    const deleteItem = (index) => {
+                        imgs.value.splice(index, 1);
+                    };
+
+                    const addList = () => {
+                        if (selected.value === 'characterselect') {
+                            jsonData.value.push({
+                                id: jsonData.value.length + 1,
+                                name: character.value,
+                                introduction: introduction1.value,
+                                img: img1.value
+                            });
+                            character.value = '';
+                            introduction1.value = '';
+                            img1.value = '';
+                        } else if (selected.value === 'skillselect') {
+                            jsonSkill.value.push({
+                                id: jsonSkill.value.length + 1,
+                                skill: skill.value,
+                                list: list.value,
+                                introduction: introduction.value,
+                                imgs: imgs.value.filter(img => img !== '') // filter out empty image strings
+                            });
+                            skill.value = '';
+                            list.value = '';
+                            introduction.value = '';
+                            imgs.value = [''];
+                        }
+                    };
+
+                    return {
+                        selected,
+                        skill,
+                        list,
+                        introduction,
+                        introduction1,
+                        img1,
+                        img,
+                        imgs,
+                        character,
+                        addImage,
+                        jsonData,
+                        jsonSkill,
+                        isCharacterMode,
+                        toggleMode,
+                        addList,
+                        deleteItem
+                    };
+                }
+            }).mount("#select");
+        </script>
+    </body>
+</html>

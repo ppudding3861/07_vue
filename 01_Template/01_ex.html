@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="step01">
+        <span>message : {{msg}}</span>
+        <hr>
+        <div v-text="msg">message : </div>
+        <div v-text="'mes1age'">message : </div>
+        <hr>
+        <h5> Raw Html </h5>
+        <p>Using text Interpolation : {{rawHtml}}</p>
+        <p>Using v-html direative : <span v-html="rawHtml"></span></p>
+    </div>
+    <script>
+        const {createApp, ref} = Vue;
+
+        createApp({
+            setup(){
+                const msg="date";
+                return{
+                    msg : "hellow world",
+                    rawHtml : "<span style='color:red'> hellow world</span>"
+                }
+            }
+        }).mount("#step01")
+
+    </script>
+</body>
+</html>
