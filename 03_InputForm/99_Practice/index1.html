@@ -1,101 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <link rel="stylesheet" href="style1.css">
-    <script src="data.js"></script>
-    <title>Document</title>
-</head>
-<body>
-    <div id="app">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <link rel="stylesheet" href="style1.css">
+        <script src="data.js"></script>
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="app">
+            <button @click="find">조회하기</button>
+            <!-- 등록 폼 -->
 
-        <!-- 등록 폼 -->
-        <div class="inputContainer">
-            <select v-model="type">
-                <option value="character">인물등록</option>
-                <option value="skill">스킬등록</option>
-            </select>
-            <div v-if="type === 'character'" class="inputBox">
-                <label>name : </label>
-                <input v-model="characterInfo.name"/>
+            <div class="inputContainer">
+                <select v-model="type">
+                    <option value="character">인물등록</option>
+                    <option value="skill">스킬등록</option>
+                </select>
+                <div v-if="type === 'character'" class="inputBox">
+                    <label>name:
+                    </label>
+                    <input v-model="characterInfo.name"/>
 
-                <label>introduction : </label>
-                <input v-model="characterInfo.introduction"/>
+                    <label>introduction:
+                    </label>
+                    <input v-model="characterInfo.introduction"/>
 
-                <label>img : </label>
-                <input v-model="characterInfo.img"/>
+                    <label>img:
+                    </label>
+                    <input v-model="characterInfo.img"/>
+                </div>
+                <div v-else="v-else" class="inputBox">
+                    <label>skill:
+                    </label>
+                    <input v-model="skillInfo.skill"/>
+
+                    <label>list:
+                    </label>
+                    <input v-model="skillInfo.list" placeholder="기술 list는 ','로 구분해주세요"/>
+
+                    <label>introduction:
+                    </label>
+                    <input v-model="skillInfo.introduction"/>
+
+                    <label>img:
+                    </label>
+                    <template v-for="index in imgCnt">
+                        <input v-model="skillInfo.imgs[index - 1]"/>
+                    </template>
+                    <button @click="imgCnt++">이미지 추가</button>
+                </div>
+
+                <button @click="pushHandler">등록</button>
             </div>
-            <div v-else class="inputBox">
-                <label>skill : </label>
-                <input v-model="skillInfo.skill"/>
 
-                <label>list : </label>
-                <input v-model="skillInfo.list" placeholder="기술 list는 ','로 구분해주세요"/>
-
-                <label>introduction : </label>
-                <input v-model="skillInfo.introduction"/>
-
-                <label>img : </label>
-                <template v-for="index in imgCnt">
-                <input v-model="skillInfo.imgs[index-1]"/>
-            </template>
-            <button @click="imgCnt++">이미지 추가</button>
+            <!-- 데이터 조회 -->
+            <div class="row">
+                <template v-if="type === 'character' && filteredCharacters.length">
+                    <div v-for="item in filteredCharacters" :key="item.id">
+                        <div class="bordered">
+                            <p>이름:
+                                {{ item.name }}</p>
+                            <p>소개:
+                                {{ item.introduction }}</p>
+                            <img :src="item.img" :alt="item.name" v-if="item.img"/>
+                            <p v-else="v-else">no image</p>
+                        </div>
+                    </div>
+                </template>
+                <template v-else-if="type === 'skill' && filteredSkills.length">
+                    <div v-for="item in filteredSkills" :key="item.id">
+                        <div class="bordered">
+                            <p>이름:
+                                {{ item.skill }}</p>
+                            <p>소개:
+                                {{ item.introduction }}</p>
+                            <div class="skill-image">
+                                <div v-for="img in item.imgs" :key="img">
+                                    <img :src="img" :alt="item.skill" v-if="img"/>
+                                    <p v-else="v-else">no image</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
-            <button @click="pushHandler">등록</button>
         </div>
-    </div>
-    <script>
-        const{createApp, ref, reactive} = Vue;
+        <script>
+            const {createApp, ref, reactive, computed} = Vue;
 
-        createApp({
-            setup(){
-                const type = ref("skill");
-                const characters = ref([]);
-                const imgCnt = ref(1);
+            createApp({
+                setup() {
+                    const type = ref("skill");
+                    const characters = ref([...scholar]);
+                    const skills = ref([...msaSkill]);
+                    const imgCnt = ref(1);
 
-                const characterInfo = reactive({
-                    id : 0,
-                    name: "",
-                    introduction: "",
-                    img: ""
-                });
+                    const characterInfo = reactive({
+                        id: 0, name: "", 
+                        introduction: "", 
+                        img: ""
+                    });
 
-                const skillInfo = reactive({
-                    id : 0,
-                    skill: "",
-                    list: "",
-                    introduction: "",
-                    imgs: []
-                })
+                    const skillInfo = reactive({
+                        id: 0, 
+                        skill: "", 
+                        list: "", 
+                        introduction: "", 
+                        imgs: []
+                    });
 
-                function pushHandler(){
-                    if(!characterInfo.name){
-                        return;
-                    }
-                    if(!characterInfo.introduction){
-                        return;
-                    }
-                    if(!characterInfo.img){
-                        return;
-                    }
-                    characterInfo.id = characters.value.length;
+                    const filteredCharacters = ref([]);
+                    const filteredSkills = ref([]);
 
-                    characters.value.push({...characterInfo});
+                    const find = () => {
+                        if (type.value === 'character') {
+                            filteredCharacters.value = [...characters.value];
+                            filteredSkills.value = [];
+                        } else {
+                            filteredSkills.value = [...skills.value];
+                            filteredCharacters.value = [];
+                        }
+                    };
+
+                    const pushHandler = () => {
+                        if (type.value === 'character') {
+                            if (!characterInfo.name || !characterInfo.introduction || !characterInfo.img) {
+                                alert("모든 항목을 입력해주세요.");
+                                return;
+                            }
+                            characterInfo.id = characters.value.length;
+                            characters
+                                .value
+                                .push({...characterInfo});
+                        } else {
+                            if (!skillInfo.skill || !skillInfo.list || !skillInfo.introduction || !skillInfo.imgs.length) {
+                                alert("모든 항목을 입력해주세요.");
+                                return;
+                            }
+                            skillInfo.id = skills.value.length;
+                            skills.value.push({...skillInfo});
+                        }
+                    };
+
+                    return {
+                        type,
+                        characterInfo,
+                        skillInfo,
+                        characters,
+                        imgCnt,
+                        skills,
+                        filteredCharacters,
+                        filteredSkills,
+                        isCharacterMode: computed(() => type.value === 'character'),
+                        
+                        pushHandler,
+                        find
+                    };
                 }
-
-                return{
-                    type,
-                    characterInfo,
-                    skillInfo,
-                    characters,
-                    imgCnt,
-                    
-                    pushHandler
-                }
-            }
-        }).mount("#app");
-    </script>
-</body>
+            }).mount("#app");
+        </script>
+    </body>
 </html>

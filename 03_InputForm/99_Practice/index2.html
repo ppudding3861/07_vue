@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>Countdown Timer</title>
+    <style>
+        .warning {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <input v-model.number="inputSeconds" placeholder="Enter seconds" type="number"/>
+        <button @click="startTimer">Start</button>
+
+        <p v-if="showWarning" class="warning">Warning: 타이머가 진행 중입니다!</p>
+        <p v-if="timer === 0">타이머 종료</p>
+        <p v-else>남은 시간: {{ timer }}초</p>
+    </div>
+
+    <script>
+        const { createApp, ref, watch } = Vue;
+
+        createApp({
+            setup() {
+                const inputSeconds = ref(0);
+                const timer = ref(0);
+                const intervalId = ref(null);
+                const showWarning = ref(false);
+
+                const startTimer = () => {
+                    if (intervalId.value) {
+                        clearInterval(intervalId.value);
+                    }
+                    timer.value = inputSeconds.value;
+                    showWarning.value = false;
+                    intervalId.value = setInterval(() => {
+                        if (timer.value > 0) {
+                            timer.value--;
+                        } else {
+                            clearInterval(intervalId.value);
+                            intervalId.value = null;
+                        }
+                    }, 1000);
+                };
+
+                watch(inputSeconds, (newVal, oldVal) => {
+                    if (intervalId.value) {
+                        showWarning.value = true;
+                    }
+                });
+
+                return {
+                    inputSeconds,
+                    timer,
+                    startTimer,
+                    showWarning
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
