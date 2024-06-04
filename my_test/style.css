@@ -1,0 +1,70 @@
+.title {
+    display: flex;
+    flex-direction: column;
+}
+.container {
+    background-color: #007bff;
+    text-align: center;
+    color: white;
+    padding: 1rem;
+}
+.maincontainer {
+    display: flex;
+    flex-direction: row;
+}
+.search {
+    width: 30%;
+    height: 500px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    overflow: auto;
+}
+#infosearch {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.list li {
+    padding: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+.infomaition{
+    padding: 20px;
+}
+.infomaition button {
+    background-color: #007bff;
+    color: white;
+    width: 100px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+.resister{
+    display: flex;
+    flex-direction: column;
+}
+#inputresister {
+    padding: 10px;
+}
+.resister-select {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.resister-select button {
+    background-color: #007bff;
+    width: 100%;
+    height: 50px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+.resister-select p {
+    color: white;
+}
+

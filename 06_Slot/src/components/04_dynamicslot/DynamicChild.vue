@@ -19,34 +19,85 @@
 </template>
 
 <style>
-.container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 10px;
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
-.north {
-    grid-column: 1 / span 2;
-    height: 200px;
-    background-color: #ff9999;
+.app-header {
+  background-color: #007BFF;
+  color: white;
+  padding: 1rem;
+  text-align: center;
 }
 
-.south {
-    grid-column: 1 / span 2;
-    height: 200px;
-    background-color: #99ccff;
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
 }
 
-.east {
-    width: 200px;
-    height: 200px;
-    background-color: #99ff99;
+.sidebar {
+  width: 300px;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  overflow-y: auto;
 }
 
-.west {
-    width: 200px;
-    height: 200px;
-    background-color: #ffcc66;
+.search-bar input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.contact-list li {
+  padding: 0.5rem;
+  cursor: pointer;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.contact-list li:hover {
+  background-color: #e2e6ea;
+}
+
+.contact-details {
+  flex: 1;
+  padding: 1rem;
+}
+
+.app-footer {
+  background-color: #f8f9fa;
+  padding: 1rem;
+}
+
+.add-contact input {
+  width: calc(100% - 10px);
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.add-contact button {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-contact button:hover {
+  background-color: #0056b3;
 }
 </style>

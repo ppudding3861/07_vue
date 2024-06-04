@@ -1,65 +1,68 @@
-<script setup="setup"></script>
+<script setup="setup">
+
+</script>
 
 <template>
-    <div class="container">
-        <div class="north">
-            <slot name="north"></slot>
-        </div>
-        <div class="container-sub">
-            <div class="east">
-                <slot name="east"></slot>
+        <div class="container">
+
+            <div class="north">
+                <slot name="north"></slot>
             </div>
-            <div class="west">
-                <slot name="west"></slot>
+            <div class="container-sub">
+                <div class="east">
+                    <slot name="east"></slot>
+                </div>
+                <div class="west">
+                    <slot name="west"></slot>
+                </div>
+            </div>
+            <div class="south">
+                <slot name="south"></slot>
             </div>
         </div>
-        <div class="south">
-            <slot name="south"></slot>
-        </div>
-    </div>
-</template>
+    </template>
 
-<style>
-    .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 1500px;
-        height: 3000px;
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 1500px;
+            height: 3000px;
 
-    }
-    .container-sub{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding: 30px;
-    }
+        }
+        .container-sub {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 30px;
+        }
 
-    .north {
-        width: 200px;
-        height: 200px;
+        .north {
+            width: 200px;
+            height: 200px;
+            border: 1px solid black;
+        }
 
-    }
+        .south {
+            width: 200px;
+            height: 200px;
+            border: 1px solid black;
 
-    .south {
-        width: 200px;
-        height: 200px;
+        }
 
-  
-    }
+        .east {
+            width: 200px;
+            height: 200px;
+            border: 1px solid black;
+            padding: 30px;
+        }
 
-    .east {
-        width: 200px;
-        height: 200px;
-
-    padding: 30px;
-    }
-
-    .west {
-        width: 200px;
-        height: 200px;
-
-    padding: 30px;
-    margin-left: 500px;
-    }
-</style>
+        .west {
+            width: 200px;
+            height: 200px;
+            border: 1px solid black;
+            padding: 30px;
+            margin-left: 500px;
+        }
+    </style>

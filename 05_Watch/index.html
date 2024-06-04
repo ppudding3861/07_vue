@@ -28,8 +28,8 @@
                         console.log(emojis["100"]);
                     });
 
-                    watch(label, (newVal) => {
-                        const url = emojis[newVal];
+                    watch(dynamicName2, (newVal) => {
+                        const url = imgs[newVal];
                         emoji.value = url;
                     });
 
